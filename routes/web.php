@@ -10,15 +10,19 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('contact', function () {
-    return view('contact');
-});
 
-Route::get('about', function () {
-    return view('about');
-});
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => ['web']], function(){
+
+	Route::get('create', 'PostController@create');
+	
+	Route::get('contact', 'PagesController@getContact');
+
+	Route::get('about', 'PagesController@getAbout');
+
+	Route::get('/', 'PagesController@getIndex');
+
+	Route::resource('posts', 'PostController');
+
 });
 
