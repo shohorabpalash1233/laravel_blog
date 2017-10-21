@@ -14,6 +14,8 @@
 
 Route::group(['middleware' => ['web']], function(){
 
+	Route::get('index', 'PostController@index');
+
 	Route::get('create', 'PostController@create');
 	
 	Route::get('contact', 'PagesController@getContact');
