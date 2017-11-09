@@ -15,7 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::orderBy('id', 'desc')->paginate(5);
 
         return view('posts.index')->withPosts($posts);
     }
@@ -41,6 +41,7 @@ class PostController extends Controller
         // validate 
         $this->validate($request, array(
             'title' => 'required|max:255',
+            'slug'  => 'required|alpha_dash|max:255|min:5|unique:posts,slug',
             'body'  => 'required'
         ));
 
@@ -48,6 +49,7 @@ class PostController extends Controller
         $post = new Post;
 
         $post->title = $request->title;
+        $post->slug = $request->slug;
         $post->body = $request->body;
 
         $post->save();
@@ -94,8 +96,38 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    {   
+        // Validate
+        $post = Post::find($id);
+        if ($request->input('slug') == $post->slug) {
+           $this->validate($request, array(
+                'title' => 'required|max:255',
+                'body'  => 'required'
+            )); 
+        } else {
+            
+            $this->validate($request, array(
+                'title' => 'required|max:255',
+                'slug'  => 'required|alpha_dash|max:255|min:5|unique:posts,slug',
+                'body'  => 'required'
+            ));
+        }
+
+
+        // Store
+        $post = Post::find($id);
+
+        $post->title = $request->input('title');
+        $post->slug = $request->input('slug');
+        $post->body  = $request->input('body');
+
+        $post->save();
+
+        // Success message
+        Session::flash('success', 'This post was successfully saved');
+
+        // Redirect
+        return redirect()->route('posts.show', $post->id);
     }
 
     /**
@@ -106,6 +138,12 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+
+        $post->delete();
+
+        Session::flash('success', 'The post was deleted successfully');
+
+        return redirect()->route('posts.index');
     }
 }
