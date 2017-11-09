@@ -5,8 +5,10 @@
 <title>Laravel Blog - @yield('title')</title>
 
 <!-- Bootstrap -->
-<link href="../css/bootstrap.min.css" rel="stylesheet">
-<link href="../css/style.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="../css/parsley.css">
+<link href="{{ URL::asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" >
+
+<link href="{{ URL::asset('css/style.css') }}" rel="stylesheet" type="text/css" >
+
+<link href="{{ URL::asset('css/parsley.css') }}" rel="stylesheet" type="text/css" >
 
 
